@@ -1,0 +1,33 @@
+{
+    "interval": 3600,
+    "data_path": "/app/data/transfer.sqlite",
+    "tasks": [
+        {
+            "name": "qb-to-tr",
+            "from": {
+                "type": "qbit",
+                "url": "http://192.168.1.10:8080",
+                "username": "admin",
+                "password": "adminadmin",
+                "torrent_path": "/bt_backup/qbittorrent"
+            },
+            "to": {
+                "type": "transmission",
+                "url": "http://192.168.1.10:9091",
+                "username": "",
+                "password": "",
+                "root_folder": true
+            },
+            "path_filter": [],
+            "path_selector": [],
+            "path_convert_type": "replace",
+            "path_convert_rule": [
+                { "from": "/vol1/downloads", "to": "/volume1/downloads" }
+            ],
+            "skip_check": true,
+            "paused": false,
+            "delete_torrent": false,
+            "marker": { "type": "none", "name": "" }
+        }
+    ]
+}

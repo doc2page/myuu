@@ -1,0 +1,22 @@
+{
+    "name": "jaxo/myuu",
+    "description": "自动转移做种客户端（自 IYUUPlus 抽离的纯本地版，无任何遥测上报）",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-pdo_sqlite": "*",
+        "ext-mbstring": "*",
+        "rhilip/bencode": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Myuu\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

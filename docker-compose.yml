@@ -1,0 +1,18 @@
+services:
+  myuu:
+    image: myuu:latest
+    build: .
+    container_name: myuu
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      # 配置目录：首次启动自动从内置示例生成 config.json，编辑后重启容器
+      - ./config:/app/config
+      # 数据目录（SQLite 去重缓存，保留即可增量续转）
+      - ./data:/app/data
+      # 【关键】来源下载器的种子文件目录（BT_backup）必须挂载进容器，只读即可：
+      # qBittorrent：容器内路径需与任务配置 from.torrent_path 一致
+      # - /volume1/docker/qbittorrent/BT_backup:/bt_backup/qbittorrent:ro
+      # Transmission 同理：
+      # - /volume1/docker/transmission/torrents:/bt_backup/transmission:ro

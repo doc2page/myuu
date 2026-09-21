@@ -26,7 +26,7 @@
 ## 部署（群晖 / 任意 Docker 宿主）
 
 ```bash
-git clone <本仓库> myuu && cd myuu
+git clone https://github.com/doc2page/myuu.git myuu && cd myuu
 docker compose up -d --build
 ```
 

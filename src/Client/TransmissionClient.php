@@ -68,6 +68,34 @@ final class TransmissionClient extends AbstractClient
         ]);
     }
 
+    /**
+     * 设置种子限速（kB/s，0=不限；torrent-add 不支持限速，需添加后补一次 torrent-set）
+     *
+     * 踩坑：字段名新旧两套并发放送——Tr ≥4.1 用 snake_case（upload_limit），
+     * 旧版（≤4.0）只认 camelCase（uploadLimit）；Tr 对不认识的字段静默忽略且仍返回
+     * success，单发一套会在另一版本上"不报错也不生效"。
+     * @param int|array<int, int> $ids
+     */
+    public function setLimits(int|array $ids, int $upKBs, int $downKBs): void
+    {
+        $arguments = ['ids' => is_array($ids) ? $ids : [$ids]];
+        if ($upKBs > 0) {
+            $arguments['upload_limit'] = $upKBs;
+            $arguments['uploadLimit'] = $upKBs;
+            $arguments['upload_limited'] = true;
+            $arguments['uploadLimited'] = true;
+        }
+        if ($downKBs > 0) {
+            $arguments['download_limit'] = $downKBs;
+            $arguments['downloadLimit'] = $downKBs;
+            $arguments['download_limited'] = true;
+            $arguments['downloadLimited'] = true;
+        }
+        if (count($arguments) > 1) {
+            $this->request('torrent-set', $arguments);
+        }
+    }
+
     public function appVersion(): string
     {
         $response = $this->request('session-get');

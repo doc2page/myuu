@@ -16,7 +16,9 @@
                 "url": "http://192.168.1.10:9091",
                 "username": "",
                 "password": "",
-                "root_folder": true
+                "root_folder": true,
+                "speed_limit_up": 1024,
+                "speed_limit_down": 0
             },
             "path_filter": [],
             "path_selector": [],

@@ -30,6 +30,8 @@ final class QBittorrentClient extends AbstractClient
         'torrent_add' => '/api/v2/torrents/add',
         'torrent_delete' => '/api/v2/torrents/delete',
         'torrent_addTags' => '/api/v2/torrents/addTags',
+        'torrent_setUploadLimit' => '/api/v2/torrents/setUploadLimit',
+        'torrent_setDownloadLimit' => '/api/v2/torrents/setDownloadLimit',
     ];
 
     /** CSRF 使用的 Session Cookie */
@@ -160,6 +162,27 @@ final class QBittorrentClient extends AbstractClient
             'hashes' => $hash,
             'tags' => is_string($tags) ? $tags : implode(',', $tags),
         ]);
+    }
+
+    /**
+     * 设置种子限速（kB/s，0=不限）
+     * @param int $upKBs 上传限速
+     * @param int $downKBs 下载限速
+     */
+    public function setLimits(string $hash, int $upKBs, int $downKBs): void
+    {
+        if ($upKBs > 0) {
+            $this->request('POST_FORM', 'torrent_setUploadLimit', [
+                'hashes' => $hash,
+                'limit' => (string)$upKBs,
+            ]);
+        }
+        if ($downKBs > 0) {
+            $this->request('POST_FORM', 'torrent_setDownloadLimit', [
+                'hashes' => $hash,
+                'limit' => (string)$downKBs,
+            ]);
+        }
     }
 
     /**

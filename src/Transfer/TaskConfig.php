@@ -100,6 +100,18 @@ final class TaskConfig
     }
 
     /**
+     * 目标下载器单种子限速（kB/s，0=不设置）
+     * @return array{up: int, down: int}
+     */
+    public function toSpeedLimits(): array
+    {
+        return [
+            'up' => max(0, (int)($this->to['speed_limit_up'] ?? 0)),
+            'down' => max(0, (int)($this->to['speed_limit_down'] ?? 0)),
+        ];
+    }
+
+    /**
      * 下载器标识（用于去重缓存）
      */
     public function clientKey(array $client): string

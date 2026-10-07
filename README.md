@@ -68,7 +68,7 @@ docker compose run --rm myuu --dry-run
 | `interval` | 常驻模式轮询间隔（秒，默认 3600，最小 60） |
 | `data_path` | SQLite 缓存路径（默认 `/app/data/transfer.sqlite`） |
 | `tasks[].name` | 任务名（唯一，用于缓存隔离与命令行指定） |
-| `tasks[].from` / `to` | 下载器：`type`（`qbit`/`transmission`）、`url`、`username`、`password`；`from` 另需 `torrent_path`；`to` 可选 `root_folder`（qB） |
+| `tasks[].from` / `to` | 下载器：`type`（`qbit`/`transmission`）、`url`、`username`、`password`；`from` 另需 `torrent_path`；`to` 可选 `root_folder`（qB）、`speed_limit_up` / `speed_limit_down`（kB/s，0 或缺省不限速；添加成功后对单个种子设置） |
 | `tasks[].path_filter` | 路径过滤器（前缀，命中即跳过，优先级高） |
 | `tasks[].path_selector` | 路径选择器（前缀，命中才转移；与 filter 同时设置时先 filter 后 selector） |
 | `tasks[].path_convert_type` | `eq`（默认）/ `add` / `sub` / `replace` |

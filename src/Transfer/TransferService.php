@@ -125,6 +125,7 @@ final class TransferService
                 $stats['ok']++;
                 $state = 1;
                 $this->sendAfter($toClient, $infohash, $ret);
+                $this->applySpeedLimits($toClient, $infohash, $ret);
                 // 转移成功时删除源做种（不删资源）
                 if ($task->deleteTorrent) {
                     $fromClient->delete($this->lastDeleteId);
@@ -277,6 +278,37 @@ final class TransferService
         }
 
         return new Torrent($metadata, true, '', $extraOptions);
+    }
+
+    /**
+     * 推送成功后：按 to 配置设置单种子限速（kB/s，0=不设置）
+     * Tr 的 torrent-add 不支持限速，需从响应解析种子 id 后补 torrent-set
+     */
+    private function applySpeedLimits(AbstractClient $toClient, string $infohash, mixed $result): void
+    {
+        try {
+            $limits = $this->task->toSpeedLimits();
+            if (0 === $limits['up'] && 0 === $limits['down']) {
+                return;
+            }
+            if ($toClient instanceof \Myuu\Client\TransmissionClient) {
+                // 响应里取种子 id（已存在时为 torrent-duplicate）
+                $resp = is_string($result) ? json_decode($result, true) : [];
+                $args = $resp['arguments'] ?? [];
+                $id = $args['torrent-added']['id'] ?? $args['torrent-duplicate']['id'] ?? null;
+                if (null === $id) {
+                    $this->log("{$infohash} 限速失败：响应中无种子 id");
+                    return;
+                }
+                $toClient->setLimits((int)$id, $limits['up'], $limits['down']);
+            } else {
+                $toClient->setLimits($infohash, $limits['up'], $limits['down']);
+            }
+            $this->log("{$infohash} 已设置限速：上传 {$limits['up']} kB/s，下载 {$limits['down']} kB/s（0=不限）");
+        } catch (Throwable $throwable) {
+            // 限速失败不影响转移结果
+            $this->log("{$infohash} 设置限速异常：{$throwable->getMessage()}");
+        }
     }
 
     /**

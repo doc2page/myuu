@@ -162,3 +162,4 @@ test-fixtures/data-test/
 test-fixtures/bt_backup/*.torrent
 # test fixtures（按全局规则不入远程）
 test-fixtures/
+CLAUDE.md
